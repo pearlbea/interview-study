@@ -46,3 +46,31 @@ Session cookies are refreshed in the Next.js proxy, and the home page verifies
 claims on the server. Future protected pages, server actions, and database
 policies must independently verify authentication and authorization. Admin
 roles, password recovery, and study data have not been implemented yet.
+
+## Database schema
+
+The initial migration is in `supabase/migrations`. It has not been applied
+automatically. Use the [Supabase CLI migration workflow](https://supabase.com/docs/guides/deployment/database-migrations)
+to test it locally and, once reviewed, apply it to the linked project.
+The SQL checks in `supabase/checks/initial_study_schema.sql` can be run with
+`psql -v ON_ERROR_STOP=1 -f supabase/checks/initial_study_schema.sql` against an
+isolated test database after applying the migration. They roll back their data.
+
+- Cards use Markdown for questions, answers, and optional additional detail;
+  use fenced code blocks for code. Render Markdown safely, including imported
+  content, when the study UI is implemented.
+- Cards can have multiple topics and ordered reference links. Draft and archived
+  cards are not visible to signed-in users; published cards are read-only.
+- Each user's `card_schedules` row contains FSRS scheduling state; a missing
+  row means the card is new to that user. `review_events` records ratings 1–4
+  (Again, Hard, Good, Easy) for scheduled reviews and study-ahead practice.
+  Schedule state 0–3 means New, Learning, Review, or Relearning respectively.
+  Only scheduled reviews should update FSRS state; practice does not.
+- Row-level security isolates each user's schedule and review history.
+  Admin access is deferred: ordinary users cannot write card content, and
+  drafts require trusted database access.
+
+The schema stores scheduling data but does not calculate FSRS intervals.
+The future review flow must write the event and updated schedule atomically,
+handle concurrent reviews, and keep practice from changing the schedule.
+No database write path, admin interface, or Anki import is implemented yet.
