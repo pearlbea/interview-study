@@ -1,8 +1,13 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
+  --background: rgb(244, 243, 250);
   --foreground: #171717;
+  --purple: rgb(91, 71, 224);
+  --grey: rgb(226, 224, 227);
+  --topic-shadow: rgb(226, 224, 227) 0px 6px 0px;
+  --topic-shadow-pressed: rgb(91, 71, 224) 0px 6px 0px;
+  --topic-background: rgb(236, 233, 255);
 }
 
 @theme inline {
