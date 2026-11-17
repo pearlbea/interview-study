@@ -1,11 +1,11 @@
 import type { SVGProps } from "react";
 
-type CheckBoxProps = SVGProps<SVGSVGElement> & { pressed: boolean };
+type CheckBoxProps = SVGProps<SVGSVGElement> & { selected: boolean };
 
-export function CheckBox({ pressed, ...props }: CheckBoxProps) {
+export function CheckBox({ selected,  ...props }: CheckBoxProps) {
   return (
     <svg viewBox="0 0 26 26" width={26} height={26} aria-hidden="true" focusable="false" {...props}>
-      {pressed ? (
+      {selected ? (
         <>
           <circle cx="13" cy="13" r="12" fill="rgb(91, 71, 224)" />
           <path
