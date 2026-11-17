@@ -3,6 +3,7 @@
 import { ReactElement } from "react";
 import { CheckBox } from "../components/CheckBox/CheckBox";
 import { grotesk } from "../fonts";
+import { TypeScriptLogo } from "./TypeScript";
 
 interface TopicCardProps {
   topic: string;
@@ -11,6 +12,7 @@ interface TopicCardProps {
   handleSelected: (topic: string) => void;
 }
 
+// TODO: Add icons for each topic
 export function TopicCard({
   topic,
   text,
@@ -24,7 +26,8 @@ export function TopicCard({
       onClick={() => handleSelected(topic)}
       className={`flex flex-col p-4 border-2 rounded-2xl min-h-40 min-w-52 gap-4 cursor-pointer ${selected ? "bg-(--topic-background)" : "bg-white"} ${selected ? "border-(--purple)" : "border-(--grey)"} ${selected ? "shadow-(--topic-shadow-selected)" : "shadow-(--topic-shadow)"}`}
     >
-      <span className="flex justify-end">
+      <span className="flex justify-between">
+        {topic === "TypeScript" ? <TypeScriptLogo /> : ""}
         <CheckBox selected={selected} />
       </span>
       <span className="flex flex-col text-left">

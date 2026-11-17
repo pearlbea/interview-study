@@ -19,7 +19,7 @@ export function TopicSelector({ topics }: TopicSelectorProps) {
   }
 
   return (
-    <div className="flex flex-wrap gap-4 justify-start">
+    <div className="flex flex-wrap gap-4 justify-start max-w-4xl">
       {Object.entries(topics).map(([k, v]) => (
         <TopicCard
           key={k}
