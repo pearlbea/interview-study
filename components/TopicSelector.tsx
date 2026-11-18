@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { TopicCard } from "./TopicCard";
 
 interface TopicSelectorProps {
@@ -9,6 +10,7 @@ interface TopicSelectorProps {
 
 export function TopicSelector({ topics }: TopicSelectorProps) {
   const [selected, setSelected] = useState<string[]>([]);
+  const router = useRouter();
 
   function handleSelected(topic: string) {
     setSelected((current) =>
@@ -16,6 +18,14 @@ export function TopicSelector({ topics }: TopicSelectorProps) {
         ? current.filter((item) => item !== topic)
         : [...current, topic],
     );
+  }
+
+  function handleStartQuiz() {
+    const params = new URLSearchParams();
+    if (selected.length) {
+      params.set("topics", selected.join(","));
+    }
+    router.push(`/quiz?${params.toString()}`);
   }
 
   return (
@@ -50,6 +60,7 @@ export function TopicSelector({ topics }: TopicSelectorProps) {
         <button
           type="button"
           className="inline-flex items-center text-white bg-(--purple) px-4 py-2 gap-1 rounded-xl cursor-pointer"
+          onClick={handleStartQuiz}
         >
           Start quiz
           <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true">

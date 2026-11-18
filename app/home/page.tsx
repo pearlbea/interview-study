@@ -1,5 +1,5 @@
 import { grotesk } from "../fonts";
-import { TopicSelector } from "../components/TopicSelector";
+import { TopicSelector } from "../../components/TopicSelector";
 
 const topics: Record<string, string> = {
   React: "hooks, state, rendering",
@@ -20,7 +20,6 @@ export default function Home({}) {
         Pick one or more topics. We&rsquo;ll shuffle their cards into one deck.
       </p>
       <TopicSelector topics={topics} />
-
     </div>
   );
 }

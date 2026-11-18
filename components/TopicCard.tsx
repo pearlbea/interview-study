@@ -1,8 +1,8 @@
 "use client";
 
 import { ReactElement } from "react";
-import { CheckBox } from "../components/CheckBox/CheckBox";
-import { grotesk } from "../fonts";
+import { CheckBox } from "./CheckBox/CheckBox";
+import { grotesk } from "../app/fonts";
 import { TypeScriptLogo } from "./TypeScript";
 
 interface TopicCardProps {
