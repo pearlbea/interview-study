@@ -6,16 +6,16 @@ import { grotesk } from "../app/fonts";
 import { TypeScriptLogo } from "./TypeScript";
 
 interface TopicCardProps {
-  topic: string;
-  text: string;
+  id: string;
+  name: string;
   selected: boolean;
   handleSelected: (topic: string) => void;
 }
 
 // TODO: Add icons for each topic
 export function TopicCard({
-  topic,
-  text,
+  id,
+  name,
   selected,
   handleSelected,
 }: TopicCardProps): ReactElement {
@@ -23,16 +23,15 @@ export function TopicCard({
     <button
       type="button"
       aria-pressed={selected}
-      onClick={() => handleSelected(topic)}
+      onClick={() => handleSelected(id)}
       className={`flex flex-col p-4 border-2 rounded-2xl min-h-40 min-w-52 gap-4 cursor-pointer ${selected ? "bg-(--topic-background)" : "bg-white"} ${selected ? "border-(--purple)" : "border-(--grey)"} ${selected ? "shadow-(--topic-shadow-selected)" : "shadow-(--topic-shadow)"}`}
     >
       <span className="flex justify-between">
-        {topic === "TypeScript" ? <TypeScriptLogo /> : ""}
+        {name === "TypeScript" ? <TypeScriptLogo /> : ""}
         <CheckBox selected={selected} />
       </span>
       <span className="flex flex-col text-left">
-        <h3 className={`${grotesk.className} text-xl`}>{topic}</h3>
-        <span>{text}</span>
+        <h3 className={`${grotesk.className} text-xl`}>{name}</h3>
       </span>
     </button>
   );

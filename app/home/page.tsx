@@ -1,25 +1,20 @@
 import { grotesk } from "../fonts";
-import { TopicSelector } from "../../components/TopicSelector";
+import { Suspense } from "react";
+import { Topics } from "../../components/Topics";
 
-const topics: Record<string, string> = {
-  React: "hooks, state, rendering",
-  TypeScript: "",
-  Postgres: "",
-  "System Design": "",
-  "Claude Code": "",
-  "Web Performance": "",
-};
-
-export default function Home({}) {
+export default async function Home({}) {
   return (
-    <div className="p-8">
-      <h1 className={`${grotesk.className} text-6xl w-2/3`}>
-        What do you want to practice today?
-      </h1>
-      <p className="py-4 text-2xl">
-        Pick one or more topics. We&rsquo;ll shuffle their cards into one deck.
-      </p>
-      <TopicSelector topics={topics} />
-    </div>
+    <Suspense fallback="fetching topics">
+      <div className="p-8">
+        <h1 className={`${grotesk.className} text-6xl w-2/3`}>
+          What do you want to practice today?
+        </h1>
+        <p className="py-4 text-2xl">
+          Pick one or more topics. We&rsquo;ll shuffle their cards into one
+          deck.
+        </p>
+        <Topics />
+      </div>
+    </Suspense>
   );
 }

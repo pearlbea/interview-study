@@ -4,11 +4,9 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { TopicCard } from "./TopicCard";
 
-interface TopicSelectorProps {
-  topics: Record<string, string>;
-}
+export type Topic = { id: string; name: string };
 
-export function TopicSelector({ topics }: TopicSelectorProps) {
+export function TopicSelector({ topics }: { topics: Topic[] }) {
   const [selected, setSelected] = useState<string[]>([]);
   const router = useRouter();
 
@@ -27,15 +25,14 @@ export function TopicSelector({ topics }: TopicSelectorProps) {
     }
     router.push(`/quiz?${params.toString()}`);
   }
-
   return (
     <div className="flex flex-wrap gap-4 justify-start max-w-4xl">
-      {Object.entries(topics).map(([k, v]) => (
+      {topics.map((item) => (
         <TopicCard
-          key={k}
-          topic={k}
-          text={v}
-          selected={selected.includes(k)}
+          key={item.id}
+          id={item.id}
+          name={item.name}
+          selected={selected.includes(item.id)}
           handleSelected={handleSelected}
         />
       ))}
@@ -45,7 +42,7 @@ export function TopicSelector({ topics }: TopicSelectorProps) {
           <button
             type="button"
             className="cursor-pointer underline"
-            onClick={() => setSelected(Object.keys(topics))}
+            onClick={() => setSelected(topics.map((t) => t.id))}
           >
             Select all
           </button>
