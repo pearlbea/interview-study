@@ -1,6 +1,6 @@
 import { connection } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import { QuestionCard } from "./QuestionCard";
+import { Questions } from "./Questions";
 
 // TODO: check for duplicate cards
 
@@ -9,7 +9,6 @@ export async function QuizContent({
 }: {
   searchParams: Promise<{ topics: string }>;
 }) {
-  
   const { topics } = await searchParams;
   const topicList = topics ? topics.split(",").filter(Boolean) : [];
   await connection();
@@ -49,7 +48,7 @@ export async function QuizContent({
           ))}
         </ul>
       </div>
-      <QuestionCard questions={cardsRes.data} />
+      <Questions questions={cardsRes.data} />
     </div>
   );
 }

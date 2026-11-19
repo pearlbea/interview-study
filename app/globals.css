@@ -3,28 +3,29 @@
 :root {
   --background: rgb(244, 243, 250);
   --foreground: #171717;
-  --purple: rgb(91, 71, 224);
-  --grey: rgb(226, 224, 227);
-  --yellow: rgb(255, 210, 94);
-  --topic-shadow: rgb(226, 224, 227) 0px 6px 0px;
-  --topic-shadow-selected: rgb(91, 71, 224) 0px 6px 0px;
-  --topic-background: rgb(236, 233, 255);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --purple: rgb(91, 71, 224);
+  --light-purple: rgb(220, 214, 255);
+  --grey: rgb(226, 224, 227);
+  --yellow: rgb(255, 210, 94);
+  --light-yellow: rgb(255, 233, 166);
+  --topic-shadow: rgb(226, 224, 227) 0px 6px 0px;
+  --topic-shadow-selected: rgb(91, 71, 224) 0px 6px 0px;
+  --topic-background: rgb(236, 233, 255);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --foreground: rgb(244, 243, 250);
+    --background: #171717;
   }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
 }
