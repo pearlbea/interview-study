@@ -1,29 +1,37 @@
 @import "tailwindcss";
 
 :root {
+  --dark: rgb(19, 18, 31);
   --background: rgb(244, 243, 250);
   --foreground: #171717;
-  --purple: rgb(91, 71, 224);
-  --grey: rgb(226, 224, 227);
-  --topic-shadow: rgb(226, 224, 227) 0px 6px 0px;
-  --topic-shadow-selected: rgb(91, 71, 224) 0px 6px 0px;
-  --topic-background: rgb(236, 233, 255);
+  --color-purple: rgb(91, 71, 224);
+  --color-lilac: rgb(220, 214, 255);
+  --color-medium-purple: rgb(236, 233, 255);
+  --color-grey: rgb(226, 224, 227);
+  --color-darker-grey: rgb(226, 224, 238);
+  --color-yellow: rgb(255, 210, 94);
+  --color-light-yellow: rgb(255, 233, 166);
+  --radius: 28px;
 }
 
-@theme inline {
+/* @media (prefers-color-scheme: dark) {
+  :root {
+    --foreground: rgb(244, 243, 250);
+    --background: var(--dark);
+    --font: rgb(241, 240, 248);
+    --button: rgb(169, 156, 255);
+  }
+} */
+
+@theme {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --topic-shadow: rgb(226, 224, 227) 0px 6px 0px;
+  --topic-shadow-selected: rgb(91, 71, 224) 0px 6px 0px;
+  --topic-background: var(--color-medium-purple);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
 }
