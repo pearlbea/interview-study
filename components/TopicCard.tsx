@@ -24,7 +24,7 @@ export function TopicCard({
       type="button"
       aria-pressed={selected}
       onClick={() => handleSelected(id)}
-      className={`flex flex-col p-4 border-2 rounded-2xl min-h-40 min-w-52 gap-4 cursor-pointer ${selected ? "bg-(--topic-background)" : "bg-white"} ${selected ? "border-(--purple)" : "border-(--grey)"} ${selected ? "shadow-(--topic-shadow-selected)" : "shadow-(--topic-shadow)"}`}
+      className={`flex flex-col p-4 border-2 rounded-2xl min-h-40 min-w-52 gap-4 cursor-pointer ${selected ? "bg-(--color-medium-purple)" : "bg-white"} ${selected ? "border-(--color-purple)" : "border-(--color-grey)"} ${selected ? "shadow-(--topic-shadow-selected)" : "shadow-(--topic-shadow)"}`}
     >
       <span className="flex justify-between">
         {name === "TypeScript" ? <TypeScriptLogo /> : ""}

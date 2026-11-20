@@ -37,7 +37,7 @@ export function TopicSelector({ topics }: { topics: Topic[] }) {
           handleSelected={handleSelected}
         />
       ))}
-      <div className="flex border-2 rounded-2xl p-4 mt-8 bg-white border-(--grey) justify-between items-center w-full">
+      <div className="flex border-2 rounded-2xl p-4 mt-8 bg-white border-(--color-grey) justify-between items-center w-full">
         <div className="flex gap-4">
           <div className="leading-10">{`${selected.length} topics selected`}</div>
           <button
@@ -57,7 +57,7 @@ export function TopicSelector({ topics }: { topics: Topic[] }) {
         </div>
         <button
           type="button"
-          className="inline-flex items-center text-white bg-(--purple) px-4 py-2 gap-1 rounded-xl cursor-pointer"
+          className="inline-flex items-center text-white bg-(--color-purple) px-4 py-2 gap-1 rounded-xl cursor-pointer"
           onClick={handleStartQuiz}
         >
           Start quiz

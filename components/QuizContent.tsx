@@ -1,4 +1,5 @@
 import { connection } from "next/server";
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { Questions } from "./Questions";
 
@@ -41,7 +42,7 @@ export async function QuizContent({
   return (
     <div className="max-w-4xl">
       <div className="flex justify-between">
-        <div>back</div>
+        <Link href="/home">Back</Link>
         <ul className="flex gap-4">
           {topicsRes.data.map((topic) => (
             <li key={topic.id}>{topic.name}</li>
