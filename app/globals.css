@@ -1,28 +1,34 @@
 @import "tailwindcss";
 
 :root {
+  --dark: rgb(19, 18, 31);
   --background: rgb(244, 243, 250);
   --foreground: #171717;
+  --color-purple: rgb(91, 71, 224);
+  --color-lilac: rgb(220, 214, 255);
+  --color-medium-purple: rgb(236, 233, 255);
+  --color-grey: rgb(226, 224, 227);
+  --color-darker-grey: rgb(226, 224, 238);
+  --color-yellow: rgb(255, 210, 94);
+  --color-light-yellow: rgb(255, 233, 166);
+  --radius: 28px;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --purple: rgb(91, 71, 224);
-  --light-purple: rgb(220, 214, 255);
-  --grey: rgb(226, 224, 227);
-  --yellow: rgb(255, 210, 94);
-  --light-yellow: rgb(255, 233, 166);
-  --topic-shadow: rgb(226, 224, 227) 0px 6px 0px;
-  --topic-shadow-selected: rgb(91, 71, 224) 0px 6px 0px;
-  --topic-background: rgb(236, 233, 255);
-}
-
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   :root {
     --foreground: rgb(244, 243, 250);
-    --background: #171717;
+    --background: var(--dark);
+    --font: rgb(241, 240, 248);
+    --button: rgb(169, 156, 255);
   }
+} */
+
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --topic-shadow: rgb(226, 224, 227) 0px 6px 0px;
+  --topic-shadow-selected: rgb(91, 71, 224) 0px 6px 0px;
+  --topic-background: var(--color-medium-purple);
 }
 
 body {

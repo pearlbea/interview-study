@@ -6,6 +6,7 @@ import { TopicCard } from "./TopicCard";
 
 export type Topic = { id: string; name: string };
 
+// TODO: Move svg to component for dark mode
 export function TopicSelector({ topics }: { topics: Topic[] }) {
   const [selected, setSelected] = useState<string[]>([]);
   const router = useRouter();
