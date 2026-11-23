@@ -6,8 +6,10 @@ import { Button } from "@/components/ui/button";
 
 export function RateQuestion({
   handleRating,
+  ratingStatus,
 }: {
   handleRating: (number: Rating) => Promise<void>;
+  ratingStatus: "idle" | "saving" | "saved";
 }) {
   const [selectedRating, setSelectedRating] = useState<Rating | null>(null);
 
@@ -25,7 +27,9 @@ export function RateQuestion({
             <Button
               variant="outline"
               onClick={() => handleClick(value)}
+              aria-pressed={selectedRating === value}
               className={` ${selectedRating === value ? "bg-muted" : "bg-background"}`}
+              disabled={ratingStatus === "saving"}
             >
               {label}
             </Button>

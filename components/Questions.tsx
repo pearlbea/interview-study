@@ -2,11 +2,6 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  Progress,
-  ProgressLabel,
-  ProgressValue,
-} from "@/components/ui/progress";
 import { rateQuestion } from "@/app/actions";
 import { AnswerCard } from "@/components/AnswerCard";
 import { QuestionCard } from "@/components/QuestionCard";
@@ -20,21 +15,21 @@ export function Questions({ questions }: { questions: Questions }) {
 
   const [ratingState, setRatingState] = useState<{
     questionId: string;
-    status: "idle" | "saving" | "saved";
-    error: string | null;
+    ratingStatus: "idle" | "saving" | "saved";
+    ratingError: string | null;
   } | null>(null);
 
   const maxIndex = questions.length - 1;
-  const percentDone = (questionIndex / questions.length) * 100;
-  const currentRating = ratingState?.questionId === questions[questionIndex]?.id
-    ? ratingState
-    : null;
+  const currentRating =
+    ratingState?.questionId === questions[questionIndex]?.id
+      ? ratingState
+      : null;
 
   async function handleRating(value: number) {
     const pending = {
       questionId: questions[questionIndex].id,
-      status: "saving" as const,
-      error: null,
+      ratingStatus: "saving" as const,
+      ratingError: null,
     };
     setRatingState(pending);
 
@@ -49,8 +44,8 @@ export function Questions({ questions }: { questions: Questions }) {
         current === pending
           ? {
               questionId: pending.questionId,
-              status: response.error ? "idle" : "saved",
-              error: response.error ?? null,
+              ratingStatus: response.error ? "idle" : "saved",
+              ratingError: response.error ?? null,
             }
           : current,
       );
@@ -59,8 +54,9 @@ export function Questions({ questions }: { questions: Questions }) {
         current === pending
           ? {
               questionId: pending.questionId,
-              status: "idle",
-              error: error instanceof Error ? error.message : String(error),
+              ratingStatus: "idle",
+              ratingError:
+                error instanceof Error ? error.message : String(error),
             }
           : current,
       );
@@ -101,18 +97,15 @@ export function Questions({ questions }: { questions: Questions }) {
 
   return (
     <div className="">
-      <Progress value={percentDone} className="w-full">
-        <ProgressLabel>{`Question ${questionIndex + 1} of ${questions.length}`}</ProgressLabel>
-        <ProgressValue />
-      </Progress>
+      <div>{`Question ${questionIndex + 1} of ${questions.length}`}</div>
       {cardShown === "question" ? (
         <QuestionCard question={questions[questionIndex]?.question} />
       ) : (
         <AnswerCard
           question={questions[questionIndex]}
           handleRating={handleRating}
-          error={currentRating?.error ?? null}
-          status={currentRating?.status ?? "idle"}
+          ratingError={currentRating?.ratingError ?? null}
+          ratingStatus={currentRating?.ratingStatus ?? "idle"}
         />
       )}
 

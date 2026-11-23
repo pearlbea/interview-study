@@ -48,12 +48,11 @@ export async function QuizContent({
     return "no matches";
   }
 
-  // TODO: Style topic badges
   return (
     <div className="max-w-4xl mt-8">
       <div className="flex justify-between mb-8">
-        <Link href="/home">
-          <ArrowLeft />
+        <Link href="/home" aria-label="Back to topics">
+          <ArrowLeft aria-hidden="true" />
         </Link>
         <ul className="flex gap-2">
           {topicsRes.data.map((topic) => (
@@ -67,7 +66,6 @@ export async function QuizContent({
           ))}
         </ul>
       </div>
-
       <Questions questions={cardsRes.data} />
     </div>
   );
