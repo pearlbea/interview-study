@@ -23,6 +23,50 @@ const quizQuestions = [
   { ...questions[0], id: "another-question", question: "Second question" },
 ];
 
+test("keeps an answer through flips and edits, then starts the next question empty", async () => {
+  const user = userEvent.setup();
+  render(<Questions questions={quizQuestions} />);
+
+  await user.type(screen.getByLabelText("Your answer"), "First answer");
+  await user.click(screen.getByRole("button", { name: /flip card/i }));
+  expect(screen.getByText("First answer")).toBeInTheDocument();
+
+  await user.click(screen.getByRole("button", { name: /flip back/i }));
+  expect(screen.getByLabelText("Your answer")).toHaveValue("First answer");
+  await user.type(screen.getByLabelText("Your answer"), " edited");
+  await user.click(screen.getByRole("button", { name: /flip card/i }));
+  expect(screen.getByText("First answer edited")).toBeInTheDocument();
+
+  await user.click(screen.getByRole("button", { name: /next card/i }));
+  expect(screen.getByLabelText("Your answer")).toHaveValue("");
+  await user.click(screen.getByRole("button", { name: /flip card/i }));
+  expect(screen.queryByText("First answer edited")).not.toBeInTheDocument();
+});
+
+test("skipping a question discards its draft before the next question", async () => {
+  const user = userEvent.setup();
+  render(<Questions questions={quizQuestions} />);
+
+  await user.type(screen.getByLabelText("Your answer"), "Skipped draft");
+  await user.click(screen.getByRole("button", { name: /skip/i }));
+  expect(screen.getByLabelText("Your answer")).toHaveValue("");
+  await user.type(screen.getByLabelText("Your answer"), "Second answer");
+  await user.click(screen.getByRole("button", { name: /flip card/i }));
+  expect(screen.getByText("Second answer")).toBeInTheDocument();
+  expect(screen.queryByText("Skipped draft")).not.toBeInTheDocument();
+});
+
+test("does not display a draft when the active question changes", async () => {
+  const user = userEvent.setup();
+  const { rerender } = render(<Questions questions={quizQuestions} />);
+
+  await user.type(screen.getByLabelText("Your answer"), "First draft");
+  rerender(<Questions questions={[quizQuestions[1]]} />);
+  expect(screen.getByLabelText("Your answer")).toHaveValue("");
+  await user.click(screen.getByRole("button", { name: /flip card/i }));
+  expect(screen.queryByText("First draft")).not.toBeInTheDocument();
+});
+
 test("clears a saved rating when advancing, but preserves it when flipping back", async () => {
   const user = userEvent.setup();
   vi.mocked(rateQuestion).mockResolvedValue({});

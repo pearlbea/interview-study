@@ -1,6 +1,17 @@
 "use client";
 
-export function QuestionCard({ question }: { question: string }) {
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+
+export function QuestionCard({
+  question,
+  yourAnswerText,
+  handleYourAnswer,
+}: {
+  question: string;
+  yourAnswerText: string;
+  handleYourAnswer: (answer: string) => void;
+}) {
   return (
     <>
       <div className="relative pt-4 mt-8">
@@ -12,7 +23,15 @@ export function QuestionCard({ question }: { question: string }) {
           </div>
           <h2 className="font-heading text-xl">{question}</h2>
           <div>
-            <span>Your answer</span>
+            <Label htmlFor="your-answer" className="mb-4 font-bold">
+              Your answer
+            </Label>
+            <Textarea
+              id="your-answer"
+              placeholder="Jot down your answer. You can compare it to our answer when you flip the card."
+              value={yourAnswerText}
+              onChange={(e) => handleYourAnswer(e.target.value)}
+            />
           </div>
         </div>
       </div>
