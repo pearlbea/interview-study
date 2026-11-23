@@ -19,11 +19,27 @@ export function Questions({ questions }: { questions: Questions }) {
     ratingError: string | null;
   } | null>(null);
 
+  const [yourAnswer, setYourAnswer] = useState<{
+    questionId: string;
+    answerText: string;
+  } | null>(null);
+
+  function handleYourAnswer(answer: string) {
+    setYourAnswer({
+      questionId: questions[questionIndex].id,
+      answerText: answer,
+    });
+  }
+
   const maxIndex = questions.length - 1;
   const currentRating =
     ratingState?.questionId === questions[questionIndex]?.id
       ? ratingState
       : null;
+  const currentAnswer =
+    yourAnswer?.questionId === questions[questionIndex]?.id
+      ? yourAnswer.answerText
+      : "";
 
   async function handleRating(value: number) {
     const pending = {
@@ -82,6 +98,7 @@ export function Questions({ questions }: { questions: Questions }) {
   function handleIndexChange() {
     if (questionIndex < questions.length) {
       setRatingState(null);
+      setYourAnswer(null);
       setQuestionIndex((prev) => prev + 1);
       setCardShown("question");
     }
@@ -99,10 +116,15 @@ export function Questions({ questions }: { questions: Questions }) {
     <div className="">
       <div>{`Question ${questionIndex + 1} of ${questions.length}`}</div>
       {cardShown === "question" ? (
-        <QuestionCard question={questions[questionIndex]?.question} />
+        <QuestionCard
+          question={questions[questionIndex]?.question}
+          yourAnswerText={currentAnswer}
+          handleYourAnswer={handleYourAnswer}
+        />
       ) : (
         <AnswerCard
           question={questions[questionIndex]}
+          yourAnswerText={currentAnswer}
           handleRating={handleRating}
           ratingError={currentRating?.ratingError ?? null}
           ratingStatus={currentRating?.ratingStatus ?? "idle"}

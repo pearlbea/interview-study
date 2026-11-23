@@ -6,13 +6,15 @@ import type { Rating } from "@/lib/ratings";
 
 export function AnswerCard({
   question,
+  yourAnswerText,
   ratingError,
   ratingStatus,
   handleRating,
 }: {
   question: Question;
+  yourAnswerText: string;
   ratingError: string | null;
-  ratingStatus: string;
+  ratingStatus: "idle" | "saving" | "saved";
   handleRating: (value: Rating) => Promise<void>;
 }) {
   return (
@@ -26,8 +28,9 @@ export function AnswerCard({
           </span>
         </div>
         <div className={`flex text-2xl heading-font`}>{question.answer}</div>
-        <div className="p-4 border-2 border-dashed border-(--color-darker-grey) rounded-xl bg-(--background)">
-          Your answer
+        <div className="flex flex-col p-4 border-2 border-dashed rounded-xl bg-muted">
+          <span className="mb-2">You wrote:</span>
+          {yourAnswerText}
         </div>
         <RateQuestion handleRating={handleRating} ratingStatus={ratingStatus} />
         {ratingStatus === "saving" && <p role="status">Saving rating…</p>}
