@@ -30,7 +30,7 @@ export function AnswerCard({
         <div className={`flex text-2xl heading-font`}>{question.answer}</div>
         <div className="flex flex-col p-4 border-2 border-dashed rounded-xl bg-muted">
           <span className="mb-2">You wrote:</span>
-          {yourAnswerText}
+          <div className="whitespace-pre-wrap">{yourAnswerText}</div>
         </div>
         <RateQuestion handleRating={handleRating} ratingStatus={ratingStatus} />
         {ratingStatus === "saving" && <p role="status">Saving rating…</p>}
