@@ -15,6 +15,9 @@ export function AnswerCard({
   status: string;
   handleRating: (value: Rating) => Promise<void>;
 }) {
+
+
+  
   return (
     <div className="relative pt-4 mt-16">
       <div className="absolute top-0 inset-x-6 bottom-6 bg-(--chart-3) rounded-[28px] -rotate-[1.6deg]"></div>
@@ -33,7 +36,7 @@ export function AnswerCard({
         {status === "saving" && <p role="status">Saving rating…</p>}
         {status === "saved" && <p role="status">Rating saved!</p>}
         {error && <p role="alert">{error}</p>}
-        <div>{question.moreInfo}</div>
+        <div>{question.more_info}</div>
         <div></div>
       </div>
     </div>

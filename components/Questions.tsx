@@ -17,32 +17,53 @@ import type { Questions } from "@/lib/schemas/question";
 export function Questions({ questions }: { questions: Questions }) {
   const [questionIndex, setQuestionIndex] = useState(0);
   const [cardShown, setCardShown] = useState<"question" | "answer">("question");
-  const [error, setError] = useState<string | null>(null);
-  const [status, setStatus] = useState<"idle" | "saving" | "saved">("idle");
+
+  const [ratingState, setRatingState] = useState<{
+    questionId: string;
+    status: "idle" | "saving" | "saved";
+    error: string | null;
+  } | null>(null);
 
   const maxIndex = questions.length - 1;
   const percentDone = (questionIndex / questions.length) * 100;
+  const currentRating = ratingState?.questionId === questions[questionIndex]?.id
+    ? ratingState
+    : null;
 
   async function handleRating(value: number) {
-    setStatus("saving");
-    setError(null);
+    const pending = {
+      questionId: questions[questionIndex].id,
+      status: "saving" as const,
+      error: null,
+    };
+    setRatingState(pending);
 
     try {
       const response = await rateQuestion({
-        questionId: questions[questionIndex].id,
+        questionId: pending.questionId,
         ratingValue: value,
       });
 
-      console.log("RESPONSE ", response);
-      if (response.error) {
-        setError(response.error);
-        setStatus("idle");
-      } else {
-        setStatus("saved");
-      }
+      // Only the request still associated with this card may update its feedback
+      setRatingState((current) =>
+        current === pending
+          ? {
+              questionId: pending.questionId,
+              status: response.error ? "idle" : "saved",
+              error: response.error ?? null,
+            }
+          : current,
+      );
     } catch (error) {
-      setError(error instanceof Error ? error.message : String(error));
-      setStatus("idle");
+      setRatingState((current) =>
+        current === pending
+          ? {
+              questionId: pending.questionId,
+              status: "idle",
+              error: error instanceof Error ? error.message : String(error),
+            }
+          : current,
+      );
     }
   }
 
@@ -64,6 +85,7 @@ export function Questions({ questions }: { questions: Questions }) {
 
   function handleIndexChange() {
     if (questionIndex < questions.length) {
+      setRatingState(null);
       setQuestionIndex((prev) => prev + 1);
       setCardShown("question");
     }
@@ -89,8 +111,8 @@ export function Questions({ questions }: { questions: Questions }) {
         <AnswerCard
           question={questions[questionIndex]}
           handleRating={handleRating}
-          error={error}
-          status={status}
+          error={currentRating?.error ?? null}
+          status={currentRating?.status ?? "idle"}
         />
       )}
 
