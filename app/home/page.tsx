@@ -1,4 +1,3 @@
-import { grotesk } from "../fonts";
 import { Suspense } from "react";
 import { Topics } from "../../components/Topics";
 
@@ -6,7 +5,7 @@ export default async function Home({}) {
   return (
     <Suspense fallback="fetching topics">
       <div className="p-8">
-        <h1 className={`${grotesk.className} text-6xl w-2/3`}>
+        <h1 className="text-6xl w-2/3 font-heading font-bold">
           What do you want to practice today?
         </h1>
         <p className="py-4 mb-8 text-2xl">
