@@ -1,31 +1,31 @@
 import { beforeEach, expect, test, vi } from "vitest";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { Questions } from "./Questions";
-import { rateQuestion } from "@/app/actions";
+import { Quiz } from "./Quiz";
+import { saveReview } from "@/app/actions";
 import "@testing-library/dom";
 
-import { questions } from "../mock-data";
+import { cards } from "../mock-data";
 
-vi.mock("@/app/actions", () => ({ rateQuestion: vi.fn() }));
+vi.mock("@/app/actions", () => ({ saveReview: vi.fn() }));
 
 beforeEach(() => {
   vi.resetAllMocks();
 });
 
-test("Questions", () => {
-  render(<Questions questions={questions} />);
+test("Quiz", () => {
+  render(<Quiz cards={cards} />);
   expect(screen.getByText(/answer/)).toBeInTheDocument();
 });
 
-const quizQuestions = [
-  ...questions,
-  { ...questions[0], id: "another-question", question: "Second question" },
+const quizCards = [
+  ...cards,
+  { ...cards[0], id: "another-card", question: "Second question" },
 ];
 
-test("keeps an answer through flips and edits, then starts the next question empty", async () => {
+test("keeps an answer through flips and edits, then starts the next card empty", async () => {
   const user = userEvent.setup();
-  render(<Questions questions={quizQuestions} />);
+  render(<Quiz cards={quizCards} />);
 
   await user.type(screen.getByLabelText("Your answer"), "First answer");
   await user.click(screen.getByRole("button", { name: /flip card/i }));
@@ -43,9 +43,9 @@ test("keeps an answer through flips and edits, then starts the next question emp
   expect(screen.queryByText("First answer edited")).not.toBeInTheDocument();
 });
 
-test("skipping a question discards its draft before the next question", async () => {
+test("skipping a card discards its Your Answer before the next card", async () => {
   const user = userEvent.setup();
-  render(<Questions questions={quizQuestions} />);
+  render(<Quiz cards={quizCards} />);
 
   await user.type(screen.getByLabelText("Your answer"), "Skipped draft");
   await user.click(screen.getByRole("button", { name: /skip/i }));
@@ -56,12 +56,12 @@ test("skipping a question discards its draft before the next question", async ()
   expect(screen.queryByText("Skipped draft")).not.toBeInTheDocument();
 });
 
-test("does not display a draft when the active question changes", async () => {
+test("does not display a Your Answer when the active card changes", async () => {
   const user = userEvent.setup();
-  const { rerender } = render(<Questions questions={quizQuestions} />);
+  const { rerender } = render(<Quiz cards={quizCards} />);
 
   await user.type(screen.getByLabelText("Your answer"), "First draft");
-  rerender(<Questions questions={[quizQuestions[1]]} />);
+  rerender(<Quiz cards={[quizCards[1]]} />);
   expect(screen.getByLabelText("Your answer")).toHaveValue("");
   await user.click(screen.getByRole("button", { name: /flip card/i }));
   expect(screen.queryByText("First draft")).not.toBeInTheDocument();
@@ -69,8 +69,8 @@ test("does not display a draft when the active question changes", async () => {
 
 test("clears a saved rating when advancing, but preserves it when flipping back", async () => {
   const user = userEvent.setup();
-  vi.mocked(rateQuestion).mockResolvedValue({});
-  render(<Questions questions={quizQuestions} />);
+  vi.mocked(saveReview).mockResolvedValue({});
+  render(<Quiz cards={quizCards} />);
 
   await user.click(screen.getByRole("button", { name: /flip card/i }));
   await user.click(screen.getByRole("button", { name: "Not at all" }));
@@ -87,8 +87,8 @@ test("clears a saved rating when advancing, but preserves it when flipping back"
 
 test("clears a rating error when advancing", async () => {
   const user = userEvent.setup();
-  vi.mocked(rateQuestion).mockResolvedValue({ error: "Could not save your rating." });
-  render(<Questions questions={quizQuestions} />);
+  vi.mocked(saveReview).mockResolvedValue({ error: "Could not save your rating." });
+  render(<Quiz cards={quizCards} />);
 
   await user.click(screen.getByRole("button", { name: /flip card/i }));
   await user.click(screen.getByRole("button", { name: "Not at all" }));
@@ -103,18 +103,18 @@ test.each([
   ["success", {}],
   ["error", { error: "Could not save your rating." }],
   ["rejection", new Error("Request failed")],
-])("ignores an earlier question's late %s", async (_result, result) => {
+])("ignores an earlier card's late %s", async (_result, result) => {
   const user = userEvent.setup();
   let resolveFirst!: (result: { error?: string }) => void;
   let rejectFirst!: (error: Error) => void;
   let resolveSecond!: (result: { error?: string }) => void;
-  vi.mocked(rateQuestion)
+  vi.mocked(saveReview)
     .mockImplementationOnce(() => new Promise((resolve, reject) => {
       resolveFirst = resolve;
       rejectFirst = reject;
     }))
     .mockImplementationOnce(() => new Promise((resolve) => { resolveSecond = resolve; }));
-  render(<Questions questions={quizQuestions} />);
+  render(<Quiz cards={quizCards} />);
 
   await user.click(screen.getByRole("button", { name: /flip card/i }));
   await user.click(screen.getByRole("button", { name: "Not at all" }));

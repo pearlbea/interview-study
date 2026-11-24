@@ -1,7 +1,7 @@
 # Interview Study
 
-A Next.js app for technical interview flashcards. The current shell supports
-Supabase email/password authentication; study features are not yet implemented.
+A Next.js app for technical interview flashcards with Supabase email/password
+authentication, a topic-based quiz, and an admin section for questions.
 Google sign-in is deferred and is not shown in the app.
 
 ## Set up authentication
@@ -42,35 +42,60 @@ npm run lint
 npm run build
 ```
 
-Session cookies are refreshed in the Next.js proxy, and the home page verifies
-claims on the server. Future protected pages, server actions, and database
-policies must independently verify authentication and authorization. Admin
-roles, password recovery, and study data have not been implemented yet.
+Session cookies are refreshed in the Next.js proxy. Protected pages, server
+actions, and database policies must independently verify authentication and
+authorization. Password recovery has not been implemented yet.
+
+## Administer questions
+
+1. Apply `supabase/migrations/20261123181000_admin_cards.sql` after the initial
+   schema migration using the Supabase migration workflow or SQL editor.
+2. Create and confirm an account, then find its user ID in Supabase
+   Authentication. In the SQL editor, run the following with that UUID:
+
+   ```sql
+   insert into public.admin_users (user_id)
+   values ('YOUR-USER-UUID')
+   on conflict do nothing;
+   ```
+
+3. Sign in with that account and open `/admin` (also linked from the topic
+   picker). An admin can create, edit, publish, and remove questions, and select
+   one or more topics. Questions support Markdown, including fenced code blocks;
+   the quiz renders Markdown without raw HTML.
+
+Removing a question permanently deletes it only if it has no reviews or
+schedule. Otherwise, it is archived to preserve study history. Archived
+questions can be edited and republished. Admin access is checked by both the
+server and database; grant or revoke it through trusted database access, not
+through user-editable metadata. To revoke access, delete the account's row from
+`public.admin_users` in the SQL editor.
 
 ## Database schema
 
 The initial migration is in `supabase/migrations`. It has not been applied
 automatically. Use the [Supabase CLI migration workflow](https://supabase.com/docs/guides/deployment/database-migrations)
 to test it locally and, once reviewed, apply it to the linked project.
-The SQL checks in `supabase/checks/initial_study_schema.sql` can be run with
-`psql -v ON_ERROR_STOP=1 -f supabase/checks/initial_study_schema.sql` against an
-isolated test database after applying the migration. They roll back their data.
+The SQL checks in `supabase/checks/initial_study_schema.sql` and
+`supabase/checks/admin_cards.sql` can be run with `psql -v ON_ERROR_STOP=1 -f`
+against an isolated test database after applying all migrations. They roll
+back their data.
 
-- Cards use Markdown for questions, answers, and optional additional detail;
-  use fenced code blocks for code. Render Markdown safely, including imported
-  content, when the study UI is implemented.
+- Cards store Markdown for questions, answers, and optional additional detail.
+  The quiz currently renders Markdown in questions; answers and additional
+  detail are displayed as text.
 - Cards can have multiple topics and ordered reference links. Draft and archived
   cards are not visible to signed-in users; published cards are read-only.
 - Each user's `card_schedules` row contains FSRS scheduling state; a missing
-  row means the card is new to that user. `review_events` records ratings 1–4
+  row means the card is new to that user. `reviews` records ratings 1–4
   (Again, Hard, Good, Easy) for scheduled reviews and study-ahead practice.
   Schedule state 0–3 means New, Learning, Review, or Relearning respectively.
   Only scheduled reviews should update FSRS state; practice does not.
-- Row-level security isolates each user's schedule and review history.
-  Admin access is deferred: ordinary users cannot write card content, and
-  drafts require trusted database access.
+- Row-level security isolates each user's schedule and review history. Ordinary
+  users cannot write card content or see drafts; admin changes use database
+  functions that verify admin membership and save cards and topics atomically.
 
 The schema stores scheduling data but does not calculate FSRS intervals.
-The future review flow must write the event and updated schedule atomically,
+The future review flow must write the review and updated schedule atomically,
 handle concurrent reviews, and keep practice from changing the schedule.
-No database write path, admin interface, or Anki import is implemented yet.
+Anki import is not implemented yet.

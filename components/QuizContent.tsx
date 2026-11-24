@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { createClient } from "@/lib/supabase/server";
-import { Questions } from "./Questions";
+import { Quiz } from "./Quiz";
 
 const topicColors = {
   Postgres: "bg-blue-700",
@@ -66,7 +66,7 @@ export async function QuizContent({
           ))}
         </ul>
       </div>
-      <Questions questions={cardsRes.data} />
+      <Quiz cards={cardsRes.data} />
     </div>
   );
 }

@@ -1,17 +1,18 @@
 "use client";
 
-import { RateQuestion } from "@/components/RateQuestion";
-import type { Question } from "@/lib/schemas/question";
+import { RatingButtons } from "@/components/RatingButtons";
+import type { Card } from "@/lib/schemas/card";
 import type { Rating } from "@/lib/ratings";
+import { Markdown } from "@/components/Markdown";
 
-export function AnswerCard({
-  question,
+export function CardBack({
+  card,
   yourAnswerText,
   ratingError,
   ratingStatus,
   handleRating,
 }: {
-  question: Question;
+  card: Card;
   yourAnswerText: string;
   ratingError: string | null;
   ratingStatus: "idle" | "saving" | "saved";
@@ -27,13 +28,15 @@ export function AnswerCard({
             ANSWER
           </span>
         </div>
-        <div className={`flex text-2xl heading-font`}>{question.answer}</div>
-        <div>{question.more_info}</div>
+        <div className={`text-2xl heading-font`}>
+          <Markdown>{card.answer}</Markdown>
+        </div>
+        <div>{card.more_info}</div>
         <div className="flex flex-col p-4 border-2 border-dashed rounded-xl bg-muted">
           <span className="mb-2">You wrote:</span>
           <div className="whitespace-pre-wrap">{yourAnswerText}</div>
         </div>
-        <RateQuestion handleRating={handleRating} ratingStatus={ratingStatus} />
+        <RatingButtons handleRating={handleRating} ratingStatus={ratingStatus} />
         {ratingStatus === "saving" && <p role="status">Saving rating…</p>}
         {ratingStatus === "saved" && <p role="status">Rating saved!</p>}
         {ratingError && <p role="alert">{ratingError}</p>}

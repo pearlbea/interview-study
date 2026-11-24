@@ -4,11 +4,11 @@ import { useState } from "react";
 import { type Rating, ratings } from "@/lib/ratings";
 import { Button } from "@/components/ui/button";
 
-export function RateQuestion({
+export function RatingButtons({
   handleRating,
   ratingStatus,
 }: {
-  handleRating: (number: Rating) => Promise<void>;
+  handleRating: (value: Rating) => Promise<void>;
   ratingStatus: "idle" | "saving" | "saved";
 }) {
   const [selectedRating, setSelectedRating] = useState<Rating | null>(null);

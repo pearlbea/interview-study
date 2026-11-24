@@ -2,64 +2,64 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { rateQuestion } from "@/app/actions";
-import { AnswerCard } from "@/components/AnswerCard";
-import { QuestionCard } from "@/components/QuestionCard";
+import { saveReview } from "@/app/actions";
+import { CardBack } from "@/components/CardBack";
+import { CardFront } from "@/components/CardFront";
 import { RefreshCw, RefreshCcw, ArrowRight } from "lucide-react";
 
-import type { Questions } from "@/lib/schemas/question";
+import type { Cards } from "@/lib/schemas/card";
 
-export function Questions({ questions }: { questions: Questions }) {
-  const [questionIndex, setQuestionIndex] = useState(0);
-  const [cardShown, setCardShown] = useState<"question" | "answer">("question");
+export function Quiz({ cards }: { cards: Cards }) {
+  const [cardIndex, setCardIndex] = useState(0);
+  const [sideShown, setSideShown] = useState<"question" | "answer">("question");
 
   const [ratingState, setRatingState] = useState<{
-    questionId: string;
+    cardId: string;
     ratingStatus: "idle" | "saving" | "saved";
     ratingError: string | null;
   } | null>(null);
 
   const [yourAnswer, setYourAnswer] = useState<{
-    questionId: string;
+    cardId: string;
     answerText: string;
   } | null>(null);
 
   function handleYourAnswer(answer: string) {
     setYourAnswer({
-      questionId: questions[questionIndex].id,
+      cardId: cards[cardIndex].id,
       answerText: answer,
     });
   }
 
-  const maxIndex = questions.length - 1;
+  const maxIndex = cards.length - 1;
   const currentRating =
-    ratingState?.questionId === questions[questionIndex]?.id
+    ratingState?.cardId === cards[cardIndex]?.id
       ? ratingState
       : null;
   const currentAnswer =
-    yourAnswer?.questionId === questions[questionIndex]?.id
+    yourAnswer?.cardId === cards[cardIndex]?.id
       ? yourAnswer.answerText
       : "";
 
   async function handleRating(value: number) {
     const pending = {
-      questionId: questions[questionIndex].id,
+      cardId: cards[cardIndex].id,
       ratingStatus: "saving" as const,
       ratingError: null,
     };
     setRatingState(pending);
 
     try {
-      const response = await rateQuestion({
-        questionId: pending.questionId,
-        ratingValue: value,
+      const response = await saveReview({
+        cardId: pending.cardId,
+        rating: value,
       });
 
       // Only the request still associated with this card may update its feedback
       setRatingState((current) =>
         current === pending
           ? {
-              questionId: pending.questionId,
+              cardId: pending.cardId,
               ratingStatus: response.error ? "idle" : "saved",
               ratingError: response.error ?? null,
             }
@@ -69,7 +69,7 @@ export function Questions({ questions }: { questions: Questions }) {
       setRatingState((current) =>
         current === pending
           ? {
-              questionId: pending.questionId,
+              cardId: pending.cardId,
               ratingStatus: "idle",
               ratingError:
                 error instanceof Error ? error.message : String(error),
@@ -80,50 +80,50 @@ export function Questions({ questions }: { questions: Questions }) {
   }
 
   function handleFirstClick() {
-    if (cardShown === "question") {
-      handleIndexChange();
+    if (sideShown === "question") {
+      handleNextCard();
     } else {
-      handleCardFlip();
+      handleFlip();
     }
   }
 
   function handleSecondClick() {
-    if (cardShown === "question") {
-      handleCardFlip();
+    if (sideShown === "question") {
+      handleFlip();
     } else {
-      handleIndexChange();
+      handleNextCard();
     }
   }
 
-  function handleIndexChange() {
-    if (questionIndex < questions.length) {
+  function handleNextCard() {
+    if (cardIndex < cards.length) {
       setRatingState(null);
       setYourAnswer(null);
-      setQuestionIndex((prev) => prev + 1);
-      setCardShown("question");
+      setCardIndex((prev) => prev + 1);
+      setSideShown("question");
     }
   }
 
-  function handleCardFlip() {
-    if (cardShown === "question") {
-      setCardShown("answer");
+  function handleFlip() {
+    if (sideShown === "question") {
+      setSideShown("answer");
     } else {
-      setCardShown("question");
+      setSideShown("question");
     }
   }
 
   return (
     <div className="">
-      <div>{`Question ${questionIndex + 1} of ${questions.length}`}</div>
-      {cardShown === "question" ? (
-        <QuestionCard
-          question={questions[questionIndex]?.question}
+      <div>{`Card ${cardIndex + 1} of ${cards.length}`}</div>
+      {sideShown === "question" ? (
+        <CardFront
+          question={cards[cardIndex]?.question}
           yourAnswerText={currentAnswer}
           handleYourAnswer={handleYourAnswer}
         />
       ) : (
-        <AnswerCard
-          question={questions[questionIndex]}
+        <CardBack
+          card={cards[cardIndex]}
           yourAnswerText={currentAnswer}
           handleRating={handleRating}
           ratingError={currentRating?.ratingError ?? null}
@@ -132,11 +132,11 @@ export function Questions({ questions }: { questions: Questions }) {
       )}
 
       <div className="flex justify-between mt-8">
-        {cardShown == "question" && questionIndex === maxIndex ? (
-          "Last question"
+        {sideShown == "question" && cardIndex === maxIndex ? (
+          "Last card"
         ) : (
           <Button size="lg" onClick={handleFirstClick} variant="outline">
-            {cardShown === "question" ? (
+            {sideShown === "question" ? (
               "Skip"
             ) : (
               <>
@@ -146,11 +146,11 @@ export function Questions({ questions }: { questions: Questions }) {
           </Button>
         )}
 
-        {cardShown === "answer" && questionIndex === maxIndex ? (
-          "No more questions"
+        {sideShown === "answer" && cardIndex === maxIndex ? (
+          "No more cards"
         ) : (
           <Button size="lg" onClick={handleSecondClick}>
-            {cardShown === "question" ? (
+            {sideShown === "question" ? (
               <>
                 <RefreshCw />
                 Flip card

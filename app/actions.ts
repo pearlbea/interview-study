@@ -4,13 +4,13 @@ import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 
 const ReviewSchema = z.object({
-  questionId: z.uuid(),
-  ratingValue: z.number().int().min(1).max(4),
+  cardId: z.uuid(),
+  rating: z.number().int().min(1).max(4),
 });
 
-export async function rateQuestion(input: {
-  questionId: string;
-  ratingValue: number;
+export async function saveReview(input: {
+  cardId: string;
+  rating: number;
 }): Promise<{ error?: string }> {
   const result = ReviewSchema.safeParse(input);
   if (!result.success) {
@@ -27,10 +27,10 @@ export async function rateQuestion(input: {
     return { error: "Please sign in to save your rating." };
   }
 
-  const { error } = await supabase.from("review_events").insert({
+  const { error } = await supabase.from("reviews").insert({
     user_id: user.id,
-    card_id: result.data.questionId,
-    rating: result.data.ratingValue,
+    card_id: result.data.cardId,
+    rating: result.data.rating,
     review_kind: "practice",
   });
 
