@@ -28,6 +28,7 @@ export function AnswerCard({
           </span>
         </div>
         <div className={`flex text-2xl heading-font`}>{question.answer}</div>
+        <div>{question.more_info}</div>
         <div className="flex flex-col p-4 border-2 border-dashed rounded-xl bg-muted">
           <span className="mb-2">You wrote:</span>
           <div className="whitespace-pre-wrap">{yourAnswerText}</div>
@@ -36,7 +37,7 @@ export function AnswerCard({
         {ratingStatus === "saving" && <p role="status">Saving rating…</p>}
         {ratingStatus === "saved" && <p role="status">Rating saved!</p>}
         {ratingError && <p role="alert">{ratingError}</p>}
-        <div>{question.more_info}</div>
+
         <div></div>
       </div>
     </div>

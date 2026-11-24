@@ -2,6 +2,7 @@
 
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Markdown } from "@/components/Markdown";
 
 export function QuestionCard({
   question,
@@ -21,7 +22,9 @@ export function QuestionCard({
           <div className="flex">
             <span className="font-bold">QUESTION</span>
           </div>
-          <h2 className="font-heading text-xl">{question}</h2>
+          <div className="font-heading text-xl">
+            <Markdown>{question}</Markdown>
+          </div>
           <div>
             <Label htmlFor="your-answer" className="mb-4 font-bold">
               Your answer
