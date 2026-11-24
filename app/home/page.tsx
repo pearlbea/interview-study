@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import { Topics } from "../../components/Topics";
+import Link from "next/link";
 
 export default async function Home({}) {
   return (
@@ -13,6 +14,7 @@ export default async function Home({}) {
           deck.
         </p>
         <Topics />
+        <p className="mt-8"><Link href="/admin" className="underline">Manage questions</Link></p>
       </div>
     </Suspense>
   );
