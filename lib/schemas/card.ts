@@ -4,7 +4,7 @@ const TopicId = z.object({
   topic_id: z.uuid(),
 });
 
-export const QuestionSchema = z.object({
+export const CardSchema = z.object({
   id: z.uuid(),
   answer: z.string(),
   card_topics: z.array(TopicId),
@@ -12,6 +12,6 @@ export const QuestionSchema = z.object({
   question: z.string(),
 });
 
-export const QuestionsSchema = z.array(QuestionSchema);
-export type Question = z.infer<typeof QuestionSchema>;
-export type Questions = z.infer<typeof QuestionsSchema>;
+export const CardsSchema = z.array(CardSchema);
+export type Card = z.infer<typeof CardSchema>;
+export type Cards = z.infer<typeof CardsSchema>;

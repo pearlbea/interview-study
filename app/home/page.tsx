@@ -14,7 +14,7 @@ export default async function Home({}) {
           deck.
         </p>
         <Topics />
-        <p className="mt-8"><Link href="/admin" className="underline">Manage questions</Link></p>
+        <p className="mt-8"><Link href="/admin" className="underline">Manage cards</Link></p>
       </div>
     </Suspense>
   );

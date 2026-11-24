@@ -1,4 +1,4 @@
--- Run against an isolated database after both migrations, as a database owner.
+-- Run against an isolated database after all migrations, as a database owner.
 begin;
 
 insert into auth.users (id) values
@@ -9,7 +9,7 @@ insert into public.cards (id, question, answer, status) values
   ('10000000-0000-0000-0000-000000000011', 'Draft', 'Answer', 'draft'),
   ('10000000-0000-0000-0000-000000000012', 'Reviewed', 'Answer', 'published'),
   ('10000000-0000-0000-0000-000000000013', 'Unreviewed', 'Answer', 'published');
-insert into public.review_events (user_id, card_id, rating, review_kind)
+insert into public.reviews (user_id, card_id, rating, review_kind)
 values ('00000000-0000-0000-0000-000000000012', '10000000-0000-0000-0000-000000000012', 3, 'practice');
 insert into public.card_topics (card_id, topic_id)
 select '10000000-0000-0000-0000-000000000011', id from public.topics where slug = 'react';
@@ -63,7 +63,7 @@ begin
   if not exists (select 1 from public.card_topics where card_id = '10000000-0000-0000-0000-000000000011') then
     raise exception 'admins must see draft topics';
   end if;
-  if exists (select 1 from public.review_events) then
+  if exists (select 1 from public.reviews) then
     raise exception 'admins must not see other users'' reviews';
   end if;
   new_id := public.admin_save_card(null, '# Markdown', 'Answer', null, 'draft', array[react_id]);
@@ -98,7 +98,7 @@ end $$;
 reset role;
 do $$
 begin
-  if not exists (select 1 from public.review_events where card_id = '10000000-0000-0000-0000-000000000012') then
+  if not exists (select 1 from public.reviews where card_id = '10000000-0000-0000-0000-000000000012') then
     raise exception 'review history must be retained';
   end if;
 end $$;

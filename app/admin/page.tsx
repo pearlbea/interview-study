@@ -14,7 +14,7 @@ async function AdminContent({ searchParams }: { searchParams: Params }) {
   const { supabase, access } = await getAdminClient();
   if (access === "signed-out") redirect("/login");
   if (access === "forbidden") {
-    return <p role="alert">You do not have access to administer questions.</p>;
+    return <p role="alert">You do not have access to administer cards.</p>;
   }
 
   const { edit, notice } = await searchParams;
@@ -26,8 +26,8 @@ async function AdminContent({ searchParams }: { searchParams: Params }) {
       .order("updated_at", { ascending: false }),
   ]);
   if (topicsResult.error || cardsResult.error) {
-    console.error("Could not load admin questions:", topicsResult.error ?? cardsResult.error);
-    throw new Error("Could not load questions.");
+    console.error("Could not load admin cards:", topicsResult.error ?? cardsResult.error);
+    throw new Error("Could not load cards.");
   }
 
   const cards: AdminCard[] = cardsResult.data;
@@ -35,9 +35,9 @@ async function AdminContent({ searchParams }: { searchParams: Params }) {
   if (edit && !card) notFound();
 
   const notices: Record<string, string> = {
-    saved: "Question saved.",
-    deleted: "Question deleted.",
-    archived: "Question archived to preserve study history.",
+    saved: "Card saved.",
+    deleted: "Card deleted.",
+    archived: "Card archived to preserve study history.",
   };
   const message = typeof notice === "string" ? notices[notice] : undefined;
 
@@ -45,10 +45,10 @@ async function AdminContent({ searchParams }: { searchParams: Params }) {
     <div className="space-y-8">
       {message && <p role="status">{message}</p>}
       <CardForm key={card?.id ?? "new"} topics={topicsResult.data} card={card} />
-      {card && <Link href="/admin" className="underline">Create a new question instead</Link>}
+      {card && <Link href="/admin" className="underline">Create a new card instead</Link>}
       <section className="space-y-4">
-        <h2 className="text-xl font-bold">Questions</h2>
-        {cards.length === 0 && <p>No questions yet.</p>}
+        <h2 className="text-xl font-bold">Cards</h2>
+        {cards.length === 0 && <p>No cards yet.</p>}
         <ul className="space-y-3">
           {cards.map((item) => (
             <li key={item.id} className="space-y-3 rounded-xl border bg-white p-4">
@@ -70,8 +70,8 @@ export default function AdminPage({ searchParams }: { searchParams: Params }) {
   return (
     <main className="w-full max-w-4xl space-y-6 p-8">
       <Link href="/home" className="underline">Back to topics</Link>
-      <h1 className="text-4xl font-heading font-bold">Manage questions</h1>
-      <Suspense fallback={<p>Loading questions…</p>}>
+      <h1 className="text-4xl font-heading font-bold">Manage cards</h1>
+      <Suspense fallback={<p>Loading cards…</p>}>
         <AdminContent searchParams={searchParams} />
       </Suspense>
     </main>

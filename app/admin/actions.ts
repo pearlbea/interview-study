@@ -44,8 +44,8 @@ export async function saveCard(
     p_topic_ids: result.data.topicIds,
   });
   if (error) {
-    console.error("Could not save question:", error.message);
-    return { error: "Could not save the question. Please try again." };
+    console.error("Could not save card:", error.message);
+    return { error: "Could not save the card. Please try again." };
   }
 
   revalidatePath("/admin");
@@ -60,12 +60,12 @@ export async function removeCard(
   if (access !== "admin") return { error: "Admin access is required." };
 
   const id = z.uuid().safeParse(formData.get("id"));
-  if (!id.success) return { error: "Invalid question ID." };
+  if (!id.success) return { error: "Invalid card ID." };
 
   const { data, error } = await supabase.rpc("admin_remove_card", { p_id: id.data });
   if (error || (data !== "deleted" && data !== "archived")) {
-    console.error("Could not remove question:", error?.message ?? "Unexpected result");
-    return { error: "Could not remove the question. Please try again." };
+    console.error("Could not remove card:", error?.message ?? "Unexpected result");
+    return { error: "Could not remove the card. Please try again." };
   }
 
   revalidatePath("/admin");

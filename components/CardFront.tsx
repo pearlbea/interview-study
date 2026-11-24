@@ -4,7 +4,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Markdown } from "@/components/Markdown";
 
-export function QuestionCard({
+export function CardFront({
   question,
   yourAnswerText,
   handleYourAnswer,

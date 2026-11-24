@@ -9,7 +9,7 @@ export function RemoveCard({ id }: { id: string }) {
 
   return (
     <form action={action} onSubmit={(event) => {
-      if (!window.confirm("Remove this question? Reviewed questions will be archived instead.")) {
+      if (!window.confirm("Remove this card? Reviewed cards will be archived instead.")) {
         event.preventDefault();
       }
     }}>

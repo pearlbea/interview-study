@@ -1,4 +1,4 @@
-export const questions = [
+export const cards = [
   {
     id: "0416d257-31d0-43eb-b6e8-261885235046",
     answer:

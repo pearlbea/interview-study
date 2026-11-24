@@ -60,12 +60,12 @@ test("reports removal errors rather than claiming success", async () => {
   const log = vi.spyOn(console, "error").mockImplementation(() => {});
   const form = new FormData();
   form.set("id", id);
-  expect(await removeCard({}, form)).toEqual({ error: "Could not remove the question. Please try again." });
+  expect(await removeCard({}, form)).toEqual({ error: "Could not remove the card. Please try again." });
   expect(redirect).not.toHaveBeenCalled();
   log.mockRestore();
 });
 
-test("reports when a reviewed question is archived", async () => {
+test("reports when a reviewed card is archived", async () => {
   rpc.mockResolvedValue({ data: "archived", error: null });
   const form = new FormData();
   form.set("id", id);

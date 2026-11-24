@@ -29,7 +29,7 @@ export function CardForm({ topics, card }: { topics: Topic[]; card?: AdminCard }
   // React resets forms after actions resolve, including validation errors.
   return (
     <form action={action} onReset={(event) => event.preventDefault()} className="space-y-5 rounded-xl border bg-white p-5">
-      <h2 className="text-xl font-bold">{card ? "Edit question" : "New question"}</h2>
+      <h2 className="text-xl font-bold">{card ? "Edit card" : "New card"}</h2>
       <input type="hidden" name="id" value={card?.id ?? ""} />
       <div className="space-y-2">
         <Label htmlFor="question">Question (Markdown)</Label>
@@ -77,7 +77,7 @@ export function CardForm({ topics, card }: { topics: Topic[]; card?: AdminCard }
         </select>
       </div>
       {state.error && <p role="alert" className="text-destructive">{state.error}</p>}
-      <Button type="submit" disabled={pending}>{pending ? "Saving…" : "Save question"}</Button>
+      <Button type="submit" disabled={pending}>{pending ? "Saving…" : "Save card"}</Button>
     </form>
   );
 }
